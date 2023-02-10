@@ -30,3 +30,48 @@ var storageAdd = function (lat, lon) {
       localStorage.setItem("cities", JSON.stringify(searchItems));
     }
   }
+
+  var displayWeather = function (data, location) {
+    $('#weather-card').empty();
+    var icon = (data.weather[0].icon);
+    var city = (data.name + ', ' + location);
+    var temp = (data.main.temp);
+    var humidity = (data.main.humidity);
+    var feelsLike = (data.main.feels_like);
+    var description = (data.weather[0].description);
+    var wind = (data.wind.speed);
+  
+    var weatherDiv = $('<div>').addClass('row');
+    var weatherCard = $('<div>').addClass('card');
+    var weatherCity = $('<h5>').addClass('card-title p-2');
+    var weatherInfo = $('<div>').addClass('col');
+    var weatherDescription = $('<p>').addClass('card-text p-3');
+    var weatherImage = $('<img>').addClass('col card-img-top border-end');
+    var weatherWind = $('<li>').addClass('list-group-item');
+    var weatherList = $('<ul>').addClass('list-group list-group-flush');
+    var weatherHumidity = $('<li>').addClass('list-group-item');
+  
+    weatherCity.text(city);
+    weatherImage.attr('src', 'http://openweathermap.org/img/wn/' + icon + '@2x.png');
+    weatherDescription.text('Currently: ' + temp + '\u00B0 with ' + description + '. (feels like ' + feelsLike + '\u00B0)');
+    weatherHumidity.text('Humidity: ' + humidity + '%');
+    weatherWind.text('Wind Speed: ' + wind + 'mph');
+  
+    weatherList
+      .append(weatherHumidity)
+      .append(weatherWind);
+  
+    weatherInfo
+      .append(weatherCity)
+      .append(weatherDescription)
+      .append(weatherList);
+  
+    weatherDiv
+      .append(weatherImage)
+      .append(weatherInfo);
+  
+    weatherCard
+      .append(weatherDiv);
+  
+    $('#weather-card').append(weatherCard);
+  }
