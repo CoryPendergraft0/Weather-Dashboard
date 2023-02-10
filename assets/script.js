@@ -77,6 +77,34 @@ var storageAdd = function (lat, lon) {
     $('#weather-card').append(weatherCard);
   }
 
+//   displays the forecast
+  var displayForecast = function (data) {
+    $('#forecast-card').empty();
+    var forecastDiv = $('<div>').addClass('row');
+    for (let i = 0; i < data.list.length - 34; i++) {
+      console.log(data);
+      var unix = (data.list[i].dt);
+      var icon = (data.list[i].weather[0].icon);
+      var temp = (data.list[i].main.temp)
+      var forecastTime = $('<h5>').addClass('card-title p-2');
+      var forecastCard = $('<div>').addClass('card col-lg-2 col-xs-auto p-2');
+      var forecastImage = $('<img>').addClass('col card-img-top');
+      var forecastDescription = $('<p>').addClass('card-text p-3');
+      var time = new Date((unix) * 1000)
+      forecastTime.text(time.toLocaleString());
+      forecastImage.attr('src', 'http://openweathermap.org/img/wn/' + icon + '@2x.png');
+      forecastDescription.text(temp + '\u00B0');
+  
+      forecastCard
+        .append(forecastTime)
+        .append(forecastImage)
+        .append(forecastDescription);
+  
+      forecastDiv.append(forecastCard);
+    }
+    $('#forecast-card').append(forecastDiv);
+  }
+
 //   gets the current weather
   var getWeather = function (data) {
     var lat = (data[0].lat);
@@ -95,3 +123,37 @@ var storageAdd = function (lat, lon) {
         console.log(error);
       })
   }
+
+// this gets the 5day forecast
+  var getForecast = function (data) {
+    var lat = (data[0].lat);
+    var lon = (data[0].lon);
+    var forecast = "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + key + "&units=imperial";
+    fetch(forecast)
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (data) {
+        displayForecast(data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
+  }
+
+//   converts search to coords
+  var getCoordinates = function (q) {
+    var locationUrl = "https://api.openweathermap.org/geo/1.0/direct?q=" + q + "&appid=" + key;
+    fetch(locationUrl)
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (data) {
+        getWeather(data);
+        getForecast(data);
+      })
+      .catch(function (err) {
+        console.log(err);
+      })
+  }
+  
