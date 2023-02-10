@@ -157,3 +157,15 @@ var storageAdd = function (lat, lon) {
       })
   }
   
+// this is the search button
+  $(document).on('click', '.btn-primary', function (event) {
+    event.preventDefault();
+    if ($(this).attr('id')) {
+      var q = $(this).attr('id');
+    } else {
+      var q = $("#searchInput").val();
+    }
+    getCoordinates(q);
+  });
+  
+  fetchSearch();
