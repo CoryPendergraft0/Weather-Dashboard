@@ -31,6 +31,7 @@ var storageAdd = function (lat, lon) {
     }
   }
 
+//   this is the forcast card
   var displayWeather = function (data, location) {
     $('#weather-card').empty();
     var icon = (data.weather[0].icon);
@@ -74,4 +75,23 @@ var storageAdd = function (lat, lon) {
       .append(weatherDiv);
   
     $('#weather-card').append(weatherCard);
+  }
+
+//   gets the current weather
+  var getWeather = function (data) {
+    var lat = (data[0].lat);
+    var lon = (data[0].lon);
+    var loc = (data[0].state);
+    var weather = "https://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon + "&appid=" + key + "&units=imperial";
+    fetch(weather)
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (data) {
+        displayWeather(data, loc);
+        storageAdd(lat, lon);
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
   }
