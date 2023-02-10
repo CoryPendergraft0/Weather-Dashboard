@@ -156,6 +156,27 @@ var storageAdd = function (lat, lon) {
         console.log(err);
       })
   }
+// current weather for city in local
+  var fetchSearch = function () {
+    var getSearch = localStorage.getItem("cities") || '[]';
+    var searchItem = JSON.parse(getSearch);
+    Object.values(searchItem).forEach(val => {
+      var latilong = val.split(" ");
+      var lat = latilong[0];
+      var lon = latilong[1];
+      var weather = "https://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon + "&appid=" + key + "&units=imperial";
+      fetch(weather)
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (data) {
+          displaySearch(data);
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
+    })
+  }
   
 // this is the search button
   $(document).on('click', '.btn-primary', function (event) {
